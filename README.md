@@ -5,6 +5,7 @@
 pip install pydirectinput
 pip install pywinusb
 pip install python-vlc
+pip install playsound 
 
 Tested with Python 3 on Windows 10 with a Mayflash Gamecube Controller Adapter
 

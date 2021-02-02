@@ -49,25 +49,67 @@ gamecube_controller_keycode_dict = {
         16: ';',
         32: 't'
     }, 
-
 }
+
+bongos_keycode_dict = {
+    1: {
+        0: '', 
+        1: 'a',     # top right
+        2: 'b',     # bottom right
+        4: 'c',     # bottom left
+        8: 'd',     # top left
+        16: 'e',    # start
+        32: 'f'     # mic
+    }, 
+    2: {
+        0: '', 
+        1: 'g',     # top right
+        2: 'h',     # bottom right
+        4: 'i',     # bottom left
+        8: 'j',     # top lefty
+        16: 'k',    # start
+        32: 'l'     # mic
+    }, 
+    3: {
+        0: '', 
+        1: 'x', 
+        2: 'a', 
+        4: 'b', 
+        8: 'y', 
+    }, 
+    4: {
+        0: '', 
+        1: 'c', 
+        2: 's', 
+        4: 'n', 
+        8: 'u', 
+    }, 
+}
+
 
 class Bongo():
     def __init__(self, device, port):
         self.prev_keypress = None   # Prevent multiple keypresses from being registered by one button press
         self.port = port
         self.device = device
+        self.mic_threshold = 100
 
     def button_handler(self, data):
         #print("Raw data: {0}".format(data))
         keycode = data[1]
-        if keycode not in gamecube_controller_keycode_dict[self.port].keys():
+        start_button = data[2]
+        if start_button == 2:
+            keycode = 16
+        #microphone = data[8]
+        #if microphone > self.mic_threshold:
+        #    keycode = 32
+        if keycode not in bongos_keycode_dict[self.port].keys():
             print('Error, unknown keypress!')
             return
-        if self.prev_keypress != gamecube_controller_keycode_dict[self.port][keycode]:
-            pdi.press(gamecube_controller_keycode_dict[self.port][keycode])
-            print(f'Port: {self.port}, Keypress: {gamecube_controller_keycode_dict[self.port][keycode]}')
-            self.prev_keypress = gamecube_controller_keycode_dict[self.port][keycode]
+        if self.prev_keypress != bongos_keycode_dict[self.port][keycode]:
+            pdi.press(bongos_keycode_dict[self.port][keycode])
+            print(f'Port: {self.port}, Keypress: {bongos_keycode_dict[self.port][keycode]}')
+            self.prev_keypress = bongos_keycode_dict[self.port][keycode]
 
     def open(self):
         self.device.open()
@@ -104,7 +146,6 @@ def main():
             mayflash_port_dict[index] = Bongo(device, port)
             mayflash_port_dict[index].open()
             port += 1
-
     while 1:
         sleep(1)
     return
