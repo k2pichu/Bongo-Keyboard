@@ -107,7 +107,9 @@ class Bongo():
             print('Error, unknown keypress!')
             return
         if self.prev_keypress != bongos_keycode_dict[self.port][keycode]:
+            pdi.keyDown('shift')
             pdi.press(bongos_keycode_dict[self.port][keycode])
+            pdi.keyUp('shift')
             print(f'Port: {self.port}, Keypress: {bongos_keycode_dict[self.port][keycode]}')
             self.prev_keypress = bongos_keycode_dict[self.port][keycode]
 
